@@ -10,7 +10,7 @@ import { DeployFunction } from "hardhat-deploy/types";
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const deployVendor: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  /*
+  
     On localhost, the deployer account is the one that comes with Hardhat, which is already funded.
 
     When deploying to live networks (e.g `yarn deploy --network goerli`), the deployer account
@@ -19,27 +19,28 @@ const deployVendor: DeployFunction = async function (hre: HardhatRuntimeEnvironm
     You can generate a random account with `yarn generate` which will fill DEPLOYER_PRIVATE_KEY
     with a random private key in the .env file (then used on hardhat.config.ts)
     You can run the `yarn account` command to check your balance in every network.
-  */
-  // // Deploy Vendor
-  // const { deployer } = await hre.getNamedAccounts();
-  // const { deploy } = hre.deployments;
-  // const yourToken = await hre.ethers.getContract<Contract>("YourToken", deployer);
-  // const yourTokenAddress = await yourToken.getAddress();
-  // await deploy("Vendor", {
-  //   from: deployer,
-  //   // Contract constructor arguments
-  //   args: [yourTokenAddress],
-  //   log: true,
-  //   // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
-  //   // automatically mining the contract deployment transaction. There is no effect on live networks.
-  //   autoMine: true,
-  // });
-  // const vendor = await hre.ethers.getContract<Contract>("Vendor", deployer);
-  // const vendorAddress = await vendor.getAddress();
-  // // Transfer tokens to Vendor
-  // await yourToken.transfer(vendorAddress, hre.ethers.parseEther("1000"));
-  // // Transfer contract ownership to your frontend address
-  // await vendor.transferOwnership("**YOUR FRONTEND ADDRESS**");
+  
+      // Deploy Vendor
+      
+  const { deployer } = await hre.getNamedAccounts();
+  const { deploy } = hre.deployments;
+  const yourToken = await hre.ethers.getContract<Contract>("YourToken", deployer);
+  const yourTokenAddress = await yourToken.getAddress();
+  await deploy("Vendor", {
+    from: deployer,
+    // Contract constructor arguments
+    args: [yourTokenAddress],
+    log: true,
+    // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
+    // automatically mining the contract deployment transaction. There is no effect on live networks.
+    autoMine: true,
+  });
+  const vendor = await hre.ethers.getContract<Contract>("Vendor", deployer);
+  const vendorAddress = await vendor.getAddress();
+  // Transfer tokens to Vendor
+  await yourToken.transfer(vendorAddress, hre.ethers.parseEther("1000"));
+  // Transfer contract ownership to your frontend address
+  await vendor.transferOwnership("**YOUR FRONTEND ADDRESS**");
 };
 
 export default deployVendor;
