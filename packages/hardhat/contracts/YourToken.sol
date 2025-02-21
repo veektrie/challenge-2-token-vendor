@@ -8,6 +8,6 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract YourToken is ERC20 {
     constructor() ERC20("Gold", "GLD") {
         // Mint 1000 tokens (with 18 decimals) to the deployer address (msg.sender)
-        _mint(0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0, 1000 * 10 ** 18);
+        _mint(msg.sender, 1000 * 10 ** 18);
     }
 }
