@@ -4,31 +4,29 @@ pragma solidity 0.8.20; //Do not change the solidity version as it negatively im
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./YourToken.sol";
 
-contract Vendor {
-    // event BuyTokens(address buyer, uint256 amountOfETH, uint256 amountOfTokens);
+contract Vendor is Ownable {
     event BuyTokens(address buyer, uint256 amountOfETH, uint256 amountOfTokens);
 
     YourToken public yourToken;
-
-    // Price: tokens per ETH
     uint256 public constant tokensPerEth = 100;
 
-    constructor(address tokenAddress) {
+    // Removed the extra parentheses here
+    constructor(address tokenAddress) Ownable(msg.sender) {
         yourToken = YourToken(tokenAddress);
     }
 
-    // ToDo: create a payable buyTokens() function:
+    // Payable function to allow users to buy tokens
     function buyTokens() public payable {
         require(msg.value > 0, "Send ETH to buy tokens");
 
-        // Calculate the amount of tokens: for each 1 ETH (1e18 wei) sent, buyer gets tokensPerEth tokens (scaled by 1e18).
+        // Calculate the number of tokens to send: msg.value (in wei) * tokensPerEth
         uint256 amountOfTokens = msg.value * tokensPerEth;
 
-        // Transfer tokens to msg.sender from the Vendor contract's balance
+        // Transfer tokens from Vendor's balance to msg.sender
         bool sent = yourToken.transfer(msg.sender, amountOfTokens);
         require(sent, "Token transfer failed");
 
-        // Emit event BuyTokens(address buyer, uint256 amountOfETH, uint256 amountOfTokens)
+        // Emit the event with purchase details
         emit BuyTokens(msg.sender, msg.value, amountOfTokens);
     }
 
