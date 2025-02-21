@@ -6,6 +6,8 @@ import "./YourToken.sol";
 
 contract Vendor is Ownable {
     event BuyTokens(address buyer, uint256 amountOfETH, uint256 amountOfTokens);
+    // (Optional) You may add an event for selling tokens as well, for example:
+    // event SellTokens(address seller, uint256 amountOfTokens, uint256 amountOfETH);
 
     YourToken public yourToken;
     uint256 public constant tokensPerEth = 100;
@@ -40,5 +42,25 @@ contract Vendor is Ownable {
         require(success, "Withdrawal failed");
     }
 
-    // ToDo: create a sellTokens(uint256 _amount) function:
+    // sellTokens function to allow users to sell tokens back to the Vendor.
+    // Users must first call approve() on YourToken to allow the Vendor to spend their tokens.
+    function sellTokens(uint256 _amount) public {
+        require(_amount > 0, "Amount must be greater than 0");
+
+        // Calculate the amount of ETH to send back:
+        // For every tokensPerEth tokens, the seller receives 1 ETH.
+        uint256 ethAmount = _amount / tokensPerEth;
+
+        // Ensure that the Vendor contract has enough ETH to pay the seller.
+        require(address(this).balance >= ethAmount, "Vendor contract has insufficient ETH");
+
+        // Transfer tokens from the seller to the Vendor contract.
+        // This requires that the seller has already approved the Vendor contract.
+        bool received = yourToken.transferFrom(msg.sender, address(this), _amount);
+        require(received, "Token transfer failed");
+
+        // Send ETH to the seller.
+        (bool sent, ) = payable(msg.sender).call{ value: ethAmount }("");
+        require(sent, "ETH transfer failed");
+    }
 }
