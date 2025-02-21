@@ -35,7 +35,7 @@ const deployVendor: DeployFunction = async function (hre: HardhatRuntimeEnvironm
 
   // (Optional) Transfer contract ownership to your frontend address
   // Replace **YOUR FRONTEND ADDRESS** with your actual frontend address if needed.
-  await vendor.transferOwnership("**YOUR FRONTEND ADDRESS**");
+  await vendor.transferOwnership("0x994A5710889eeA17999B7c86D3d6b6c21ab53C19");
 };
 
 export default deployVendor;
